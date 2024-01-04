@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +13,31 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final List<String> allNumbers = ["7", "8", "9", "/", "4", "5", "6", "X", "1", "2", "3", "-", "0", ",", "=", "+"];
+  String currentNumber = "0";
+
+  void calculator(String number){
+    setState(() {
+      switch (number) {
+        case "AC":
+          currentNumber = "0";
+          break;
+        case "<X":
+          currentNumber = currentNumber.substring(0, currentNumber.length - 1);
+          break;
+        case "=":
+          currentNumber = currentNumber;
+          break;
+        default:
+          if (currentNumber == "0") {
+            currentNumber = number;
+          } else {
+            currentNumber += number;
+          }
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +50,12 @@ class _MyAppState extends State<MyApp> {
       body:   Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Text('0', style: TextStyle(fontSize: 40),),
+             Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+                Text(currentNumber, style: TextStyle(fontSize: 56)),
+            ],
+          ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -39,7 +68,10 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               for (var item in allNumbers.sublist(0, 4))
-                Text(item, style: const TextStyle(fontSize: 40),),
+                GestureDetector(
+                  child: Text(item, style: const TextStyle(fontSize: 40)), onTap: () {
+                    calculator(item);
+                  } ,),
             ],
           ),
           Row(
